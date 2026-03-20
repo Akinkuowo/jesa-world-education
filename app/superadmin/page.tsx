@@ -213,17 +213,7 @@ export default function SuperAdmin() {
                         </form>
                     )}
 
-                    <div className="mt-8 pt-8 border-t border-white/5 text-center">
-                        <p className="text-slate-500 text-sm font-medium">
-                            Need a master account?{" "}
-                            <button
-                                onClick={() => router.push("/superadmin/register")}
-                                className="text-white font-bold hover:text-blue-400 transition-colors"
-                            >
-                                Register here
-                            </button>
-                        </p>
-                    </div>
+                    
                 </div>
 
                 <div className="mt-12 flex items-center justify-center space-x-8 opacity-40 grayscale transition-all hover:grayscale-0 hover:opacity-100">

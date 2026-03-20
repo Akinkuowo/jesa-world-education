@@ -1,0 +1,69 @@
+# Query: "http://localhost:4000/api
+# ContextLines: 1
+
+15 results - 5 files
+
+app/dashboard/teacher/components/Assignments.tsx:
+  26          try {
+  27:             const response = await fetch(`${NEXT_PUBLIC_API_URL}/teacher/assignments`, {
+  28                  method: "POST",
+
+app/dashboard/teacher/components/ClassCalendar.tsx:
+  70                  const token = localStorage.getItem("token");
+  71:                 const res = await fetch(`${NEXT_PUBLIC_API_URL}/teacher/exams`, {
+  72                      headers: { Authorization: `Bearer ${token}` }
+
+app/dashboard/teacher/components/ExamSetter.tsx:
+   83          try {
+   84:             const response = await fetch(`${NEXT_PUBLIC_API_URL}/teacher/exams/questions`, {
+   85                  headers: {
+
+  102              try {
+  103:                 const response = await fetch("http://localhost:4000/api/teacher/my-data", {
+  104                      headers: {
+
+  139          try {
+  140:             const response = await fetch("http://localhost:4000/api/teacher/ai/chat", {
+  141                  method: "POST",
+
+  177  
+  178:         const url = new URL("http://localhost:4000/api/teacher/exams/bulk-upload");
+  179          if (newQuestion.subject) url.searchParams.append("subject", newQuestion.subject);
+
+  209                  ? `http://localhost:4000/api/teacher/exams/questions/${newQuestion.id}`
+  210:                 : "http://localhost:4000/api/teacher/exams/questions";
+  211              const method = newQuestion.id ? "PUT" : "POST";
+
+  247              const url = isBulk 
+  248:                 ? "http://localhost:4000/api/teacher/exams/questions/bulk-delete"
+  249                  : `http://localhost:4000/api/teacher/exams/questions/${deleteConfirm.id}`;
+
+app/dashboard/teacher/components/LessonNotebook.tsx:
+   69          try {
+   70:             const response = await fetch("http://localhost:4000/api/teacher/lesson-notes", {
+   71                  headers: {
+
+   88              try {
+   89:                 const response = await fetch("http://localhost:4000/api/teacher/my-data", {
+   90                      headers: {
+
+  125          try {
+  126:             const response = await fetch("http://localhost:4000/api/teacher/ai/chat", {
+  127                  method: "POST",
+
+  158                  ? `http://localhost:4000/api/teacher/lesson-notes/${currentNote.id}`
+  159:                 : "http://localhost:4000/api/teacher/lesson-notes";
+  160              const method = currentNote.id ? "PUT" : "POST";
+
+app/dashboard/teacher/components/StudentAwards.tsx:
+   97              const token = localStorage.getItem("token");
+   98:             const url = new URL("http://localhost:4000/api/teacher/awards");
+   99              if (subject) url.searchParams.set("subject", subject);
+
+  154  
+  155:             const res = await fetch("http://localhost:4000/api/teacher/awards/grade", {
+  156                  method: "POST",
+
+  183                  const token = localStorage.getItem("token");
+  184:                 const res = await fetch("http://localhost:4000/api/teacher/my-data", {
+  185                      headers: { Authorization: `Bearer ${token}` }
