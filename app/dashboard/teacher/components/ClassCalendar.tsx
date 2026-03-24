@@ -24,12 +24,12 @@ interface ExamSchedule {
 }
 
 const TYPE_COLORS: Record<string, { bg: string; text: string; dot: string; border: string }> = {
-    "First Term": { bg: "bg-indigo-50", text: "text-indigo-700", dot: "bg-indigo-500", border: "border-l-indigo-500" },
+    "First Term":  { bg: "bg-indigo-50",  text: "text-indigo-700",  dot: "bg-indigo-500",  border: "border-l-indigo-500" },
     "Second Term": { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500", border: "border-l-emerald-500" },
-    "Third Term": { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500", border: "border-l-amber-500" },
-    "MOCK": { bg: "bg-purple-50", text: "text-purple-700", dot: "bg-purple-500", border: "border-l-purple-500" },
-    "WAEC": { bg: "bg-rose-50", text: "text-rose-700", dot: "bg-rose-500", border: "border-l-rose-500" },
-    "default": { bg: "bg-slate-50", text: "text-slate-700", dot: "bg-slate-400", border: "border-l-slate-400" },
+    "Third Term":  { bg: "bg-amber-50",   text: "text-amber-700",   dot: "bg-amber-500",   border: "border-l-amber-500" },
+    "MOCK":        { bg: "bg-purple-50",  text: "text-purple-700",  dot: "bg-purple-500",  border: "border-l-purple-500" },
+    "WAEC":        { bg: "bg-rose-50",    text: "text-rose-700",    dot: "bg-rose-500",    border: "border-l-rose-500" },
+    "default":     { bg: "bg-slate-50",   text: "text-slate-700",   dot: "bg-slate-400",   border: "border-l-slate-400" },
 };
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -68,7 +68,7 @@ export default function ClassCalendar() {
             setLoading(true);
             try {
                 const token = localStorage.getItem("token");
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teacher/exams`, {
+                const res = await fetch("http://localhost:4000/api/teacher/exams", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -199,17 +199,19 @@ export default function ClassCalendar() {
                                     <button
                                         key={day.toISOString()}
                                         onClick={() => setSelectedDay(isSelected ? null : day)}
-                                        className={`min-h-[80px] p-2 border-b border-r border-slate-50 text-left transition-all group flex flex-col ${isSelected ? 'bg-indigo-50 ring-2 ring-inset ring-indigo-500/20' :
-                                                isToday ? 'bg-emerald-50/60' :
-                                                    isPast ? 'bg-slate-50/50' :
-                                                        'hover:bg-slate-50'
-                                            }`}
+                                        className={`min-h-[80px] p-2 border-b border-r border-slate-50 text-left transition-all group flex flex-col ${
+                                            isSelected ? 'bg-indigo-50 ring-2 ring-inset ring-indigo-500/20' :
+                                            isToday ? 'bg-emerald-50/60' :
+                                            isPast ? 'bg-slate-50/50' :
+                                            'hover:bg-slate-50'
+                                        }`}
                                     >
-                                        <span className={`w-7 h-7 flex items-center justify-center text-sm font-black rounded-full transition-all mb-1 ${isToday ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' :
-                                                isSelected ? 'bg-indigo-600 text-white' :
-                                                    isPast ? 'text-slate-300' :
-                                                        'text-slate-700 group-hover:bg-slate-200'
-                                            }`}>
+                                        <span className={`w-7 h-7 flex items-center justify-center text-sm font-black rounded-full transition-all mb-1 ${
+                                            isToday ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' :
+                                            isSelected ? 'bg-indigo-600 text-white' :
+                                            isPast ? 'text-slate-300' :
+                                            'text-slate-700 group-hover:bg-slate-200'
+                                        }`}>
                                             {day.getDate()}
                                         </span>
                                         <div className="flex flex-col gap-0.5 w-full">
@@ -327,7 +329,7 @@ export default function ClassCalendar() {
                                             className="flex items-start gap-3 cursor-pointer group"
                                         >
                                             <div className="flex flex-col items-center w-9 flex-shrink-0 text-center">
-                                                <span className="text-[9px] font-black text-slate-400 uppercase">{MONTHS[d.getMonth()].slice(0, 3)}</span>
+                                                <span className="text-[9px] font-black text-slate-400 uppercase">{MONTHS[d.getMonth()].slice(0,3)}</span>
                                                 <span className="text-lg font-black text-slate-800 leading-none">{d.getDate()}</span>
                                             </div>
                                             <div className={`flex-1 min-w-0 p-2.5 rounded-xl ${c.bg} group-hover:shadow-sm transition-all`}>

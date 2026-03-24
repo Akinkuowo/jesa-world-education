@@ -81,7 +81,7 @@ export default function ExamSetter() {
 
     const fetchQuestions = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions`, {
+            const response = await fetch("http://localhost:4000/api/teacher/exams/questions", {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
@@ -100,7 +100,7 @@ export default function ExamSetter() {
 
         const fetchTeacherData = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teacher/my-data`, {
+                const response = await fetch("http://localhost:4000/api/teacher/my-data", {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
                     }
@@ -137,7 +137,7 @@ export default function ExamSetter() {
         setIsAILoading(true);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teacher/ai/chat`, {
+            const response = await fetch("http://localhost:4000/api/teacher/ai/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export default function ExamSetter() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/bulk-upload`);
+        const url = new URL("http://localhost:4000/api/teacher/exams/bulk-upload");
         if (newQuestion.subject) url.searchParams.append("subject", newQuestion.subject);
         if (newQuestion.class) url.searchParams.append("class", newQuestion.class);
         if (newQuestion.term) url.searchParams.append("term", newQuestion.term);
@@ -206,8 +206,8 @@ export default function ExamSetter() {
     const handleCreate = async () => {
         try {
             const url = newQuestion.id
-                ? `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions/${newQuestion.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions`;
+                ? `http://localhost:4000/api/teacher/exams/questions/${newQuestion.id}`
+                : "http://localhost:4000/api/teacher/exams/questions";
             const method = newQuestion.id ? "PUT" : "POST";
 
             const response = await fetch(url, {
@@ -245,8 +245,8 @@ export default function ExamSetter() {
         try {
             const isBulk = Array.isArray(deleteConfirm.id);
             const url = isBulk 
-                ? `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions/bulk-delete`
-                : `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions/${deleteConfirm.id}`;
+                ? "http://localhost:4000/api/teacher/exams/questions/bulk-delete"
+                : `http://localhost:4000/api/teacher/exams/questions/${deleteConfirm.id}`;
             const method = isBulk ? "POST" : "DELETE";
             const body = isBulk ? JSON.stringify({ ids: deleteConfirm.id }) : undefined;
 
@@ -321,16 +321,16 @@ export default function ExamSetter() {
                 </div>
             )}
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h2 className="text-3xl font-black text-slate-800 tracking-tight">Exam Question Setter</h2>
+                    <h2 className="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight">Exam Question Setter</h2>
                     <p className="text-slate-500 text-sm font-medium">Build robust question banks for students</p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap items-center gap-3 lg:space-x-4">
                     {(view === 'CREATE' || selectedSubjectBank) && (
-                        <label className="flex items-center space-x-2 bg-white border-2 border-slate-100 px-6 py-3 rounded-2xl font-bold cursor-pointer hover:border-indigo-500/20 hover:bg-slate-50 transition-all text-slate-600 shadow-sm active:scale-95">
-                            <Upload className="w-5 h-5 text-indigo-500" />
-                            <span>{isUploading ? "Processing..." : "Bulk Upload (.docx)"}</span>
+                        <label className="flex items-center space-x-2 bg-white border-2 border-slate-100 px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl lg:rounded-2xl font-bold cursor-pointer hover:border-indigo-500/20 hover:bg-slate-50 transition-all text-slate-600 shadow-sm active:scale-95 text-xs lg:text-sm">
+                            <Upload className="w-4 h-4 lg:w-5 lg:h-5 text-indigo-500" />
+                            <span>{isUploading ? "Processing..." : "Bulk Upload"}</span>
                             <input type="file" className="hidden" accept=".docx" onChange={handleFileUpload} disabled={isUploading} />
                         </label>
                     )}
@@ -341,19 +341,19 @@ export default function ExamSetter() {
                             setSelectedIds(new Set());
                             setView('LIST');
                         }}
-                        className={`px-5 py-3 rounded-2xl font-bold text-sm transition-all ${view === 'LIST' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:text-slate-600'}`}
+                        className={`px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl lg:rounded-2xl font-bold text-xs lg:text-sm transition-all ${view === 'LIST' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:text-slate-600'}`}
                     >
-                        Question Bank
+                        Bank
                     </button>
                     <button
                         onClick={() => {
                             setNewQuestion({ subject: teacherData.subjects[0] || "", class: teacherData.classes[0] || "", term: "First Term", question: "", answer: "", options: ["", "", "", ""], marks: 1 });
                             setView('CREATE');
                         }}
-                        className={`px-8 py-4 rounded-[1.5rem] font-bold transition-all shadow-xl flex items-center space-x-2 ${view === 'CREATE' ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                        className={`px-6 lg:px-8 py-3 lg:py-4 rounded-xl lg:rounded-[1.5rem] font-bold transition-all shadow-xl flex items-center space-x-2 text-xs lg:text-sm ${view === 'CREATE' ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                     >
-                        <Plus className="w-5 h-5" />
-                        <span>Add New Question</span>
+                        <Plus className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <span>Add New</span>
                     </button>
                 </div>
             </div>
@@ -379,7 +379,7 @@ export default function ExamSetter() {
                             </div>
 
                             <div className="space-y-8">
-                                <div className="grid grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="space-y-3">
                                         <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Subject</label>
                                         <select
@@ -400,7 +400,7 @@ export default function ExamSetter() {
                                             value={newQuestion.class}
                                             onChange={(e) => setNewQuestion({ ...newQuestion, class: e.target.value })}
                                         >
-                                            <option value="">Select Class</option>
+                                            <option key="default" value="">Select Class</option>
                                             {teacherData.classes.map((cls, i) => (
                                                 <option key={i} value={cls}>{cls}</option>
                                             ))}
@@ -509,7 +509,7 @@ export default function ExamSetter() {
                     </div>
 
                     {/* Premium AI Sidebar */}
-                    <div className="w-full lg:w-[480px] bg-slate-950 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl shadow-slate-900/40 border border-white/5 h-[calc(100vh-250px)]">
+                    <div className="w-full lg:w-[480px] bg-slate-950 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl shadow-slate-900/40 border border-white/5 h-[500px] lg:h-[calc(100vh-250px)]">
                         {/* AI Header */}
                         <div className="p-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-xl flex items-center justify-between">
                             <div className="flex items-center space-x-4">
