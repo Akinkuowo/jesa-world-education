@@ -51,6 +51,7 @@ export default function AdminDashboard() {
     const [newEmployee, setNewEmployee] = useState({
         email: "",
         password: "",
+        studentId: "",
         firstName: "",
         lastName: "",
         role: "TEACHER",
@@ -210,7 +211,7 @@ export default function AdminDashboard() {
                 fetchStats();
                 if (activeView === 'TEACHERS' && newEmployee.role === 'TEACHER') fetchUsers('TEACHER');
                 if (activeView === 'STUDENTS' && newEmployee.role === 'STUDENT') fetchUsers('STUDENT');
-                setNewEmployee({ email: "", password: "", firstName: "", lastName: "", role: "TEACHER", phone: "", address: "", studentClass: "", subjects: [] });
+                setNewEmployee({ email: "", password: "", studentId: "", firstName: "", lastName: "", role: "TEACHER", phone: "", address: "", studentClass: "", subjects: [] });
                 setTimeout(() => setFeedback(null), 3000);
             } else {
                 const data = await res.json();
@@ -233,6 +234,7 @@ export default function AdminDashboard() {
                     firstName: row.firstName || row['First Name'],
                     lastName: row.lastName || row['Last Name'],
                     email: row.email || row['Email'],
+                    studentId: row.studentId || row['Student ID'],
                     password: row.password || row['Password'] || '123456', // Default password if missing, or require it
                     studentClass: row.studentClass || row['Class'],
                     phone: row.phone || row['Phone'],
@@ -359,7 +361,7 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans">
             {/* Mobile Overlay */}
             {isSidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm transition-opacity"
                     onClick={() => setIsSidebarOpen(false)}
                 />
@@ -407,7 +409,7 @@ export default function AdminDashboard() {
             <main className="lg:ml-72 p-6 lg:p-10 max-w-[1600px] mx-auto min-h-screen">
                 <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 lg:mb-12 gap-6">
                     <div className="flex items-center gap-4">
-                        <button 
+                        <button
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                             className="lg:hidden p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-600"
                         >
@@ -651,150 +653,151 @@ export default function AdminDashboard() {
 
                         <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto shadow-sm custom-scrollbar">
                             <div className="min-w-[1000px]">
-                            {loadingUsers ? (
-                                <div className="p-20 text-center text-slate-400 font-bold">Loading {activeView.toLowerCase()}...</div>
-                            ) : (
-                                <table className="w-full text-left relative">
-                                    <thead className="bg-slate-50 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
-                                        <tr>
-                                            {activeView === 'STUDENTS' && (
-                                                <th className="px-4 py-5">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedStudents.length === roleUsers.filter(u => {
-                                                            const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
-                                                            const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
-                                                            return matchesSearch && matchesClass;
-                                                        }).length && roleUsers.length > 0}
-                                                        onChange={(e) => {
-                                                            const filteredUsers = roleUsers.filter(u => {
+                                {loadingUsers ? (
+                                    <div className="p-20 text-center text-slate-400 font-bold">Loading {activeView.toLowerCase()}...</div>
+                                ) : (
+                                    <table className="w-full text-left relative">
+                                        <thead className="bg-slate-50 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
+                                            <tr>
+                                                {activeView === 'STUDENTS' && (
+                                                    <th className="px-4 py-5">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedStudents.length === roleUsers.filter(u => {
                                                                 const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
                                                                 const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
                                                                 return matchesSearch && matchesClass;
-                                                            });
-                                                            if (e.target.checked) {
-                                                                setSelectedStudents(filteredUsers.map(u => u.id));
-                                                            } else {
-                                                                setSelectedStudents([]);
-                                                            }
-                                                        }}
-                                                        className="rounded text-indigo-600 focus:ring-indigo-500/20"
-                                                    />
-                                                </th>
-                                            )}
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Name</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone</th>
-                                            {activeView === 'STUDENTS' && <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Class</th>}
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Joined</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100">
-                                        {roleUsers
-                                            .filter(u => {
-                                                const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
-                                                const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
-                                                return matchesSearch && matchesClass;
-                                            })
-                                            .length === 0 ? (
-                                            <tr>
-                                                <td colSpan={7} className="px-8 py-20 text-center text-slate-400 font-bold">No {activeView.toLowerCase()} matching filters.</td>
+                                                            }).length && roleUsers.length > 0}
+                                                            onChange={(e) => {
+                                                                const filteredUsers = roleUsers.filter(u => {
+                                                                    const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
+                                                                    const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
+                                                                    return matchesSearch && matchesClass;
+                                                                });
+                                                                if (e.target.checked) {
+                                                                    setSelectedStudents(filteredUsers.map(u => u.id));
+                                                                } else {
+                                                                    setSelectedStudents([]);
+                                                                }
+                                                            }}
+                                                            className="rounded text-indigo-600 focus:ring-indigo-500/20"
+                                                        />
+                                                    </th>
+                                                )}
+                                                {activeView === 'STUDENTS' && <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Student ID</th>}
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Name</th>
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</th>
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone</th>
+                                                {activeView === 'STUDENTS' && <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Class</th>}
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Joined</th>
+                                                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
                                             </tr>
-                                        ) : (
-                                            roleUsers
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {roleUsers
                                                 .filter(u => {
                                                     const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
                                                     const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
                                                     return matchesSearch && matchesClass;
                                                 })
-                                                .map(u => (
-                                                    <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
-                                                        {activeView === 'STUDENTS' && (
-                                                            <td className="px-4 py-5">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={selectedStudents.includes(u.id)}
-                                                                    onChange={(e) => {
-                                                                        if (e.target.checked) {
-                                                                            setSelectedStudents([...selectedStudents, u.id]);
-                                                                        } else {
-                                                                            setSelectedStudents(selectedStudents.filter(id => id !== u.id));
-                                                                        }
-                                                                    }}
-                                                                    className="rounded text-indigo-600 focus:ring-indigo-500/20"
-                                                                />
-                                                            </td>
-                                                        )}
-                                                        <td className="px-8 py-5">
-                                                            <div className="flex items-center space-x-3">
-                                                                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-600">
-                                                                    {u.firstName[0]}{u.lastName[0]}
+                                                .length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={activeView === 'STUDENTS' ? 8 : 7} className="px-8 py-20 text-center text-slate-400 font-bold">No {activeView.toLowerCase()} matching filters.</td>
+                                                </tr>
+                                            ) : (
+                                                roleUsers
+                                                    .filter(u => {
+                                                        const matchesSearch = (u.firstName + " " + u.lastName + " " + u.email).toLowerCase().includes(studentSearch.toLowerCase());
+                                                        const matchesClass = !classFilter || u.studentClass?.toLowerCase() === classFilter.toLowerCase();
+                                                        return matchesSearch && matchesClass;
+                                                    })
+                                                    .map(u => (
+                                                        <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
+                                                            {activeView === 'STUDENTS' && (
+                                                                <td className="px-4 py-5">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={selectedStudents.includes(u.id)}
+                                                                        onChange={(e) => {
+                                                                            if (e.target.checked) {
+                                                                                setSelectedStudents([...selectedStudents, u.id]);
+                                                                            } else {
+                                                                                setSelectedStudents(selectedStudents.filter(id => id !== u.id));
+                                                                            }
+                                                                        }}
+                                                                        className="rounded text-indigo-600 focus:ring-indigo-500/20"
+                                                                    />
+                                                                </td>
+                                                            )}
+                                                            <td className="px-8 py-5">
+                                                                <div className="flex items-center space-x-3">
+                                                                    <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-600">
+                                                                        {u.firstName[0]}{u.lastName[0]}
+                                                                    </div>
+                                                                    <span className="font-bold text-slate-900">{u.firstName} {u.lastName}</span>
                                                                 </div>
-                                                                <span className="font-bold text-slate-900">{u.firstName} {u.lastName}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-8 py-5 text-sm font-medium text-slate-600">{u.email}</td>
-                                                        <td className="px-8 py-5 text-sm font-medium text-slate-600">{u.phone || '-'}</td>
-                                                        {activeView === 'STUDENTS' && <td className="px-8 py-5">
-                                                            <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase">
-                                                                {u.studentClass || 'N/A'}
-                                                            </span>
-                                                        </td>}
-                                                        <td className="px-8 py-5">
-                                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black ${u.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                                                                {u.isActive ? 'ACTIVE' : 'INACTIVE'}
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-8 py-5 text-sm font-medium text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
-                                                        <td className="px-8 py-5">
-                                                            <div className="flex items-center justify-end space-x-2">
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setEditingUser({ ...u, subjects: u.subjects || [] });
-                                                                        setShowEditModal(true);
-                                                                    }}
-                                                                    className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-transparent hover:border-indigo-100"
-                                                                    title="Edit Details"
-                                                                >
-                                                                    <Edit className="w-4 h-4" />
-                                                                </button>
-                                                                {activeView === 'STUDENTS' && (
+                                                            </td>
+                                                            <td className="px-8 py-5 text-sm font-medium text-slate-600">{u.email}</td>
+                                                            <td className="px-8 py-5 text-sm font-medium text-slate-600">{u.phone || '-'}</td>
+                                                            {activeView === 'STUDENTS' && <td className="px-8 py-5">
+                                                                <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase">
+                                                                    {u.studentClass || 'N/A'}
+                                                                </span>
+                                                            </td>}
+                                                            <td className="px-8 py-5">
+                                                                <span className={`px-3 py-1 rounded-full text-[10px] font-black ${u.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+                                                                    {u.isActive ? 'ACTIVE' : 'INACTIVE'}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-8 py-5 text-sm font-medium text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
+                                                            <td className="px-8 py-5">
+                                                                <div className="flex items-center justify-end space-x-2">
                                                                     <button
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            setPromotingStudent(u);
-                                                                            setNewClassForPromotion(u.studentClass || "js1");
-                                                                            setShowPromoteModal(true);
+                                                                            setEditingUser({ ...u, subjects: u.subjects || [] });
+                                                                            setShowEditModal(true);
                                                                         }}
-                                                                        className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors border border-transparent hover:border-emerald-100"
-                                                                        title="Promote Student"
+                                                                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-transparent hover:border-indigo-100"
+                                                                        title="Edit Details"
                                                                     >
-                                                                        <ArrowUpCircle className="w-4 h-4" />
+                                                                        <Edit className="w-4 h-4" />
                                                                     </button>
-                                                                )}
-                                                                {activeView === 'STUDENTS' && u.studentClass?.toLowerCase() === 'ss3' && (
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleGraduateStudent(u);
-                                                                        }}
-                                                                        className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-100"
-                                                                        title="Graduate Student"
-                                                                    >
-                                                                        <Trophy className="w-4 h-4" />
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            )}
+                                                                    {activeView === 'STUDENTS' && (
+                                                                        <button
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                setPromotingStudent(u);
+                                                                                setNewClassForPromotion(u.studentClass || "js1");
+                                                                                setShowPromoteModal(true);
+                                                                            }}
+                                                                            className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors border border-transparent hover:border-emerald-100"
+                                                                            title="Promote Student"
+                                                                        >
+                                                                            <ArrowUpCircle className="w-4 h-4" />
+                                                                        </button>
+                                                                    )}
+                                                                    {activeView === 'STUDENTS' && u.studentClass?.toLowerCase() === 'ss3' && (
+                                                                        <button
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                handleGraduateStudent(u);
+                                                                            }}
+                                                                            className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-100"
+                                                                            title="Graduate Student"
+                                                                        >
+                                                                            <Trophy className="w-4 h-4" />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -930,6 +933,13 @@ export default function AdminDashboard() {
                                 </div>
                             )}
 
+                            {newEmployee.role === 'STUDENT' && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-600">Student ID</label>
+                                    <input type="text" placeholder="e.g. STU123" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" onChange={e => setNewEmployee({ ...newEmployee, studentId: e.target.value })} />
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-slate-600">First Name</label>
@@ -996,7 +1006,7 @@ export default function AdminDashboard() {
 
                                 <div className="bg-slate-50 p-4 rounded-xl">
                                     <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">CSV Format Definition</h4>
-                                    <p className="text-xs text-slate-400">Headers: <code className="bg-slate-200 px-1 py-0.5 rounded text-slate-600">firstName, lastName, email, password, studentClass, phone, address</code></p>
+                                    <p className="text-xs text-slate-400">Headers: <code className="bg-slate-200 px-1 py-0.5 rounded text-slate-600">firstName, lastName, email, studentId, password, studentClass, phone, address</code></p>
                                 </div>
 
                                 <div className="flex justify-end space-x-4 pt-4">
@@ -1132,6 +1142,13 @@ export default function AdminDashboard() {
                                         })}
                                     </div>
                                     <p className="text-xs text-slate-400 font-medium">Selected: {editingUser.subjects?.length || 0}</p>
+                                </div>
+                            )}
+
+                            {editingUser.role === 'STUDENT' && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-600">Student ID</label>
+                                    <input type="text" value={editingUser.studentId || ""} placeholder="e.g. STU123" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" onChange={e => setEditingUser({ ...editingUser, studentId: e.target.value })} />
                                 </div>
                             )}
 
