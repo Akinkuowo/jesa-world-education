@@ -244,7 +244,7 @@ export default function ExamSetter() {
         if (!deleteConfirm.id) return;
         try {
             const isBulk = Array.isArray(deleteConfirm.id);
-            const url = isBulk
+            const url = isBulk 
                 ? `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions/bulk-delete`
                 : `${process.env.NEXT_PUBLIC_API_URL}/teacher/exams/questions/${deleteConfirm.id}`;
             const method = isBulk ? "POST" : "DELETE";
@@ -402,11 +402,11 @@ export default function ExamSetter() {
                                         >
                                             <option key="default" value="">Select Class</option>
                                             {(() => {
-                                                const isJunior = teacherData.classes.some(c => c.toUpperCase().includes('JS')) ||
-                                                    teacherData.subjects.some(s => s.toUpperCase().includes('JS') || s.toUpperCase().includes('JUNIOR'));
-                                                const isSenior = teacherData.classes.some(c => c.toUpperCase().includes('SS')) ||
-                                                    teacherData.subjects.some(s => s.toUpperCase().includes('SS') || s.toUpperCase().includes('SENIOR'));
-
+                                                const isJunior = teacherData.classes.some(c => c.toUpperCase().includes('JS')) || 
+                                                                teacherData.subjects.some(s => s.toUpperCase().includes('JS') || s.toUpperCase().includes('JUNIOR'));
+                                                const isSenior = teacherData.classes.some(c => c.toUpperCase().includes('SS')) || 
+                                                                teacherData.subjects.some(s => s.toUpperCase().includes('SS') || s.toUpperCase().includes('SENIOR'));
+                                                
                                                 const options = [];
                                                 if (isJunior || (!isJunior && !isSenior)) {
                                                     options.push("JS 1", "JS 2", "JS 3");
@@ -414,7 +414,7 @@ export default function ExamSetter() {
                                                 if (isSenior || (!isJunior && !isSenior)) {
                                                     options.push("SS 1", "SS 2", "SS 3");
                                                 }
-
+                                                
                                                 return Array.from(new Set(options)).map((cls, i) => (
                                                     <option key={i} value={cls}>{cls}</option>
                                                 ));
@@ -693,8 +693,8 @@ export default function ExamSetter() {
                                     <div>
                                         <h3 className="text-xl font-black text-slate-800 tracking-tight">{selectedSubjectBank} {selectedClassBank ? `- Class ${selectedClassBank}` : ''} Bank</h3>
                                         <p className="text-sm font-medium text-slate-500">
-                                            {selectedClassBank
-                                                ? `${savedQuestions.filter(q => q.subject === selectedSubjectBank && q.class === selectedClassBank).length} Questions for this class`
+                                            {selectedClassBank 
+                                                ? `${savedQuestions.filter(q => q.subject === selectedSubjectBank && q.class === selectedClassBank).length} Questions for this class` 
                                                 : `${savedQuestions.filter(q => q.subject === selectedSubjectBank).length} Total Questions`
                                             }
                                         </p>
@@ -712,14 +712,14 @@ export default function ExamSetter() {
                                     )}
                                     <button
                                         onClick={() => {
-                                            setNewQuestion({
-                                                subject: selectedSubjectBank,
-                                                class: selectedClassBank || teacherData.classes[0] || "",
-                                                term: "First Term",
-                                                question: "",
-                                                answer: "",
-                                                options: ["", "", "", ""],
-                                                marks: 1
+                                            setNewQuestion({ 
+                                                subject: selectedSubjectBank, 
+                                                class: selectedClassBank || teacherData.classes[0] || "", 
+                                                term: "First Term", 
+                                                question: "", 
+                                                answer: "", 
+                                                options: ["", "", "", ""], 
+                                                marks: 1 
                                             });
                                             setView('CREATE');
                                         }}
@@ -731,7 +731,7 @@ export default function ExamSetter() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between mb-8">
+                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex p-1 bg-slate-100 rounded-2xl w-fit">
                                     <button
                                         onClick={() => {
@@ -755,12 +755,13 @@ export default function ExamSetter() {
 
                                 {savedQuestions.filter(q => q.subject === selectedSubjectBank && q.type === bankFilter && (selectedClassBank ? q.class === selectedClassBank : true)).length > 0 && (
                                     <label className="flex items-center space-x-3 cursor-pointer group">
-                                        <div
+                                        <div 
                                             onClick={() => toggleSelectAll(savedQuestions.filter(q => q.subject === selectedSubjectBank && q.type === bankFilter && (selectedClassBank ? q.class === selectedClassBank : true)))}
-                                            className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${selectedIds.size === savedQuestions.filter(q => q.subject === selectedSubjectBank && q.type === bankFilter && (selectedClassBank ? q.class === selectedClassBank : true)).length && selectedIds.size > 0
-                                                    ? 'bg-indigo-600 border-indigo-600'
-                                                    : 'bg-white border-slate-200 group-hover:border-indigo-400'
-                                                }`}
+                                            className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
+                                                selectedIds.size === savedQuestions.filter(q => q.subject === selectedSubjectBank && q.type === bankFilter && (selectedClassBank ? q.class === selectedClassBank : true)).length && selectedIds.size > 0
+                                                ? 'bg-indigo-600 border-indigo-600' 
+                                                : 'bg-white border-slate-200 group-hover:border-indigo-400'
+                                            }`}
                                         >
                                             {selectedIds.size === savedQuestions.filter(q => q.subject === selectedSubjectBank && q.type === bankFilter && (selectedClassBank ? q.class === selectedClassBank : true)).length && selectedIds.size > 0 && <Check className="w-4 h-4 text-white" />}
                                         </div>
@@ -826,12 +827,13 @@ export default function ExamSetter() {
                                                 <div key={q.id} className={`p-6 border-2 rounded-[1.5rem] transition-all group flex flex-col space-y-4 ${selectedIds.has(q.id) ? 'border-indigo-500 bg-indigo-50/30' : 'border-slate-100 bg-white hover:border-indigo-500/30 hover:shadow-lg hover:shadow-slate-200/50'}`}>
                                                     <div className="flex justify-between items-start">
                                                         <div className="flex items-center space-x-4">
-                                                            <div
+                                                            <div 
                                                                 onClick={() => toggleSelect(q.id)}
-                                                                className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer ${selectedIds.has(q.id)
-                                                                        ? 'bg-indigo-600 border-indigo-600'
-                                                                        : 'bg-white border-slate-200 hover:border-indigo-400'
-                                                                    }`}
+                                                                className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer ${
+                                                                    selectedIds.has(q.id) 
+                                                                    ? 'bg-indigo-600 border-indigo-600' 
+                                                                    : 'bg-white border-slate-200 hover:border-indigo-400'
+                                                                }`}
                                                             >
                                                                 {selectedIds.has(q.id) && <Check className="w-4 h-4 text-white" />}
                                                             </div>
@@ -901,7 +903,7 @@ export default function ExamSetter() {
                         </div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-2">{Array.isArray(deleteConfirm.id) ? 'Bulk Delete Questions?' : 'Delete Question?'}</h3>
                         <p className="text-slate-500 font-medium mb-8">
-                            {Array.isArray(deleteConfirm.id)
+                            {Array.isArray(deleteConfirm.id) 
                                 ? `Are you sure you want to delete ${deleteConfirm.id.length} exam questions? This action cannot be undone and will remove them from your question bank.`
                                 : "Are you sure you want to delete this exam question? This action cannot be undone and will remove it from your question bank."
                             }

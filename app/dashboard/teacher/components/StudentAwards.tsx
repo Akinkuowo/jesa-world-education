@@ -124,7 +124,7 @@ export default function StudentAwards() {
             if (res.ok) {
                 const data = await res.json();
                 setSelectedResult(data);
-
+                
                 // Initialize editedMarks for theory questions
                 const initialMarks: Record<string, number> = {};
                 data.answers.forEach((ans: any) => {
@@ -154,9 +154,9 @@ export default function StudentAwards() {
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teacher/awards/grade`, {
                 method: "POST",
-                headers: {
+                headers: { 
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}` 
                 },
                 body: JSON.stringify({
                     resultId: selectedResult.id,
@@ -241,7 +241,7 @@ export default function StudentAwards() {
                 <div>
                     <div className="flex items-center gap-3 mb-1">
                         {activeSubject && (
-                            <button
+                            <button 
                                 onClick={handleBackToGrid}
                                 className="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all text-slate-600 active:scale-95"
                             >
@@ -254,7 +254,7 @@ export default function StudentAwards() {
                         </h2>
                     </div>
                     <p className="text-slate-500 text-sm font-medium">
-                        {activeSubject
+                        {activeSubject 
                             ? `Detailed rankings for students offering ${activeSubject}`
                             : "Select a subject to view student rankings and performances"
                         }
@@ -275,28 +275,28 @@ export default function StudentAwards() {
                         teacherData.subjects.map((subj) => {
                             const subjResults = results.filter(r => r.subject === subj);
                             const uniqueStudents = new Set(subjResults.map(r => r.student.studentId)).size;
-                            const avgScore = subjResults.length > 0
+                            const avgScore = subjResults.length > 0 
                                 ? Math.round(subjResults.reduce((acc, r) => acc + r.marks, 0) / subjResults.length)
                                 : 0;
-                            const topScore = subjResults.length > 0
+                            const topScore = subjResults.length > 0 
                                 ? Math.max(...subjResults.map(r => r.marks))
                                 : 0;
-
+                            
                             return (
-                                <div
-                                    key={subj}
+                                <div 
+                                    key={subj} 
                                     onClick={() => handleSubjectClick(subj)}
                                     className="group bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-bl-[5rem] -mr-10 -mt-10 group-hover:scale-110 transition-transform duration-500 -z-0" />
-
+                                    
                                     <div className="relative z-10">
                                         <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
                                             <BookOpen className="w-7 h-7 text-white" />
                                         </div>
-
+                                        
                                         <h3 className="text-xl font-black text-slate-800 mb-2 truncate">{subj}</h3>
-
+                                        
                                         <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-50">
                                             <div className="flex flex-col">
                                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Students</span>
@@ -480,7 +480,7 @@ export default function StudentAwards() {
                                                 <div key={r.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group">
                                                     <RankBadge rank={idx + 1} />
                                                     <div className="flex-1 min-w-0">
-                                                        <button
+                                                        <button 
                                                             onClick={() => fetchDetailedResult(r.id)}
                                                             className="text-left block w-full group"
                                                         >
@@ -569,8 +569,8 @@ export default function StudentAwards() {
 
                                 {/* Manual Test Score Entry (if not Mock/WAEC/NECO) */}
                                 {!(
-                                    selectedResult.subject.toLowerCase().includes("mock") ||
-                                    selectedResult.subject.toLowerCase().includes("waec") ||
+                                    selectedResult.subject.toLowerCase().includes("mock") || 
+                                    selectedResult.subject.toLowerCase().includes("waec") || 
                                     selectedResult.subject.toLowerCase().includes("neco")
                                 ) ? (
                                     <div className="bg-white p-6 rounded-3xl border-2 border-indigo-500/20 shadow-xl shadow-indigo-600/5 flex flex-col justify-center">
@@ -584,7 +584,7 @@ export default function StudentAwards() {
                                                 <p className="text-[10px] text-slate-400 font-bold">Manual Entry</p>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <input
+                                                <input 
                                                     type="number"
                                                     value={editedTestScore}
                                                     onChange={(e) => setEditedTestScore(parseFloat(e.target.value) || 0)}
@@ -621,7 +621,7 @@ export default function StudentAwards() {
                                                     const choiceIdx = ans.question.answer.toUpperCase().charCodeAt(0) - 65;
                                                     const correctText = ans.question.options[choiceIdx];
                                                     const isCorrect = ans.answerText.trim().toLowerCase() === correctText?.trim().toLowerCase();
-
+                                                    
                                                     return (
                                                         <div key={ans.id} className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                                             <div className="p-6 md:p-8">
@@ -629,13 +629,14 @@ export default function StudentAwards() {
                                                                     <span className="px-3 py-1 bg-slate-50 text-[10px] font-black text-slate-400 rounded-lg uppercase tracking-widest">
                                                                         Question {idx + 1}
                                                                     </span>
-                                                                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${isCorrect ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                                                                        }`}>
+                                                                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                                                                        isCorrect ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                                                                    }`}>
                                                                         {isCorrect ? `+${ans.question.marks} pts` : '0 pts'}
                                                                     </span>
                                                                 </div>
-
-                                                                <div
+                                                                
+                                                                <div 
                                                                     className="text-lg font-bold text-slate-800 mb-6 prose prose-slate max-w-none"
                                                                     dangerouslySetInnerHTML={{ __html: ans.question.question }}
                                                                 />
@@ -643,8 +644,9 @@ export default function StudentAwards() {
                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                                     <div className="space-y-2">
                                                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Student's Choice:</span>
-                                                                        <div className={`p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50 border-emerald-500/20 text-emerald-900' : 'bg-rose-50 border-rose-500/20 text-rose-900'
-                                                                            } font-bold text-sm`}>
+                                                                        <div className={`p-4 rounded-xl border ${
+                                                                            isCorrect ? 'bg-emerald-50 border-emerald-500/20 text-emerald-900' : 'bg-rose-50 border-rose-500/20 text-rose-900'
+                                                                        } font-bold text-sm`}>
                                                                             {ans.answerText}
                                                                         </div>
                                                                     </div>
@@ -687,7 +689,7 @@ export default function StudentAwards() {
                                                                 <div className="flex items-center gap-3">
                                                                     <span className="text-xs font-bold text-slate-400">Award Score:</span>
                                                                     <div className="flex items-center gap-2">
-                                                                        <input
+                                                                        <input 
                                                                             type="number"
                                                                             value={editedMarks[ans.id] ?? 0}
                                                                             onChange={(e) => setEditedMarks(prev => ({
@@ -701,8 +703,8 @@ export default function StudentAwards() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                            <div
+                                                            
+                                                            <div 
                                                                 className="text-lg font-bold text-slate-800 mb-6 prose prose-slate max-w-none"
                                                                 dangerouslySetInnerHTML={{ __html: ans.question.question }}
                                                             />
@@ -724,14 +726,14 @@ export default function StudentAwards() {
 
                         {/* Modal Footer with Save Actions */}
                         <div className="p-8 border-t border-slate-100 bg-white sticky bottom-0 z-10 flex gap-4">
-                            <button
+                            <button 
                                 onClick={() => setSelectedResult(null)}
                                 className="flex-1 bg-slate-100 text-slate-700 font-black py-4 rounded-2xl hover:bg-slate-200 transition-all active:scale-[0.98]"
                             >
                                 Close Review
                             </button>
                             {selectedResult.answers.some((a: any) => a.question.type === 'THEORY') && (
-                                <button
+                                <button 
                                     onClick={handleSaveGrades}
                                     disabled={savingGrades}
                                     className="flex-[2] bg-indigo-600 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
